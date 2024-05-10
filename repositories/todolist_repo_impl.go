@@ -21,13 +21,21 @@ func (repo *TodoListRepoImplementation) Update(db *gorm.DB, todoList entities.To
 	return db.Model(&todoList).Updates(todoList).Error
 }
 
-// func (repo *TodoListRepoImplementation) Delete(db *gorm.DB, todoList entities.TodoList) {
+func (repo *TodoListRepoImplementation) Delete(db *gorm.DB, todoList entities.TodoList) {
+	db.Delete(&todoList, todoList.ID)
+}
 
-// }
+func (repo *TodoListRepoImplementation) GetByID(db *gorm.DB, todoListId int) (entities.TodoList, error) {
+	var todoList entities.TodoList
+	if err := db.Where("id = ?", todoListId).First(&todoList).Error; err != nil {
+		return entities.TodoList{}, err
+	}
+	return todoList, nil
 
-// func (repo *TodoListRepoImplementation) GetByID(db *gorm.DB, todoListId int) (entities.TodoList, error) {
-// 	return
-// }
-// func (repo *TodoListRepoImplementation) GetAll(db *gorm.DB) []entities.TodoList {
+}
 
-// }
+func (repo *TodoListRepoImplementation) GetAll(db *gorm.DB) []entities.TodoList {
+	var todoLists []entities.TodoList
+	db.Find(&todoLists)
+	return todoLists
+}
